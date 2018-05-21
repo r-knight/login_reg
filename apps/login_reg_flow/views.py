@@ -3,7 +3,8 @@ from django.contrib import messages
 from .models import *
 
 def index(request):
-    response = "placeholder for index page"
+    if 'id' in request.session:
+        return redirect('/success')
     return render(request, 'login_reg_flow/index.html')
 def register(request):
     if request.method == 'POST':
@@ -36,6 +37,7 @@ def success(request):
         name = User.objects.get(id=request.session['id']).first_name
         return render(request, 'login_reg_flow/success.html', {'name':name})
     else:
+        messages.error(request, "You must be logged in to view that page.") 
         return redirect('/')
 def logout(request):
     if 'id' in request.session:
